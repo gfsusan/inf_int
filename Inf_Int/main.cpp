@@ -14,8 +14,9 @@ int main()
 	//inf_int f = d;
 	//inf_int g(f);
 
-	inf_int A("1111111122222222333333344444444");
+	inf_int A("11111111222222223333333344444444");
 	inf_int B(A);
+	inf_int C("-11111111");
 
 	// cin >> g ;   // not required
 
@@ -36,13 +37,19 @@ int main()
 	}
 	*/
 
-	cout << "A==B 인가요? ";
+	cout << endl << A << endl << B << endl << C << endl;
+
+	cout << "A == B ? ";
 	(A == B) ? cout << "yes" : cout << "no";
 	cout << endl;
 
-	cout << "A>B 인가요? ";
+	cout << "A > B ? ";
 	(A > B) ? cout << "yes" : cout << "no";
+	cout << endl;
 
+	cout << "A + C = " << A + C << endl;
+
+	cout << "A - C = " << A - C << endl;
 
 	return 0;
 }

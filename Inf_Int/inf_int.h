@@ -22,6 +22,10 @@ public:
 
 	inf_int& operator=(const inf_int&); // assignment operator
 
+	void inf_int::Add(const char num, const unsigned int index);
+	void inf_int::Sub(const char num, const unsigned int index);
+	inf_int inf_int::Abs();
+
 	friend bool operator==(const inf_int&, const inf_int&);
 	friend bool operator!=(const inf_int&, const inf_int&);
 	friend bool operator>(const inf_int&, const inf_int&);
