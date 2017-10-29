@@ -125,8 +125,6 @@ bool operator>(const inf_int& a, const inf_int& b) {
 				if (a.digits[i] < b.digits[i])
 					return false;
 		}
-		else
-			return true;
 	}
 	else if (a.thesign == false && b.thesign == true) {		 // a는 음수, b는 양수
 		return false;
@@ -139,12 +137,8 @@ bool operator>(const inf_int& a, const inf_int& b) {
 			if (a.digits[i] > b.digits[i])
 				return false;
 		}
-		else {
-			return true;
-		}
 	}
-	else													// a는 양수, b는 음수
-		return true;
+	return true;										// a는 양수, b는 음수
 
 }
 
@@ -193,7 +187,7 @@ inf_int operator-(const inf_int& a, const inf_int&b) {
 			small = a;
 			big = b;
 		}
-		for (int i = 0; i<small.length; i++){
+		for (unsigned int i = 0; i<small.length; i++){
 			big.Sub(small.digits[i], i + 1);
 		}
 
