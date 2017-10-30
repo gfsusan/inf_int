@@ -3,7 +3,6 @@
 #include <string>
 #include "inf_int.h"
 
-
 using namespace std;
 
 inf_int::inf_int() {
@@ -179,7 +178,7 @@ inf_int operator+(const inf_int& a, const inf_int& b)
 }
 
 inf_int operator-(const inf_int& a, const inf_int&b) {	
-	// 절댓값 큰 수에서 작은 수 뺀다고 가정
+	// 절댓값 큰 수에서 작은 수 뺍시다
 	inf_int big = a, small = b;
 
 	if (a.thesign == b.thesign){	// 이항의 부호가 같을 경우 - 연산자로 연산
@@ -203,9 +202,17 @@ inf_int operator-(const inf_int& a, const inf_int&b) {
 inf_int operator*(const inf_int& a, const inf_int& b) {
 	inf_int c;
 
-	
+	for (int i = 0; i < b.length; i++) {			// b의 각 자리
+		for (int j = 0; j < a.length; j++) {		// a의 각 자리
+			for (int k = 0; k < b.digits[i]-'0'; k++) {	// b의 j번째 자리 만큼 반복
+				c.Add(a.digits[j], j + i + 1);
+			}
+		}
+	}
 
-	return a;
+	c.thesign = a.thesign & b.thesign;
+
+	return c;
 }
 
 ostream& operator<<(ostream& out, const inf_int& a) {
@@ -219,7 +226,6 @@ ostream& operator<<(ostream& out, const inf_int& a) {
 	}
 	return out;
 }
-
 
 void inf_int::Add(const char num, const unsigned int index)	// a의 index 자리수에 n을 더한다. 0<=n<=9, ex) a가 391일때, Add(a, 2, 2)의 결과는 411
 {
@@ -251,6 +257,7 @@ void inf_int::Add(const char num, const unsigned int index)	// a의 index 자리수�
 
 void inf_int::Sub(const char num, const unsigned int index)	// a의 index 자리수에 n을 뺀다. 0<=n<=9, ex) a가 411일때, Sub(a, 2, 2)의 결과는 391
 {
+	// (절댓값이) 큰 수에서 작은 수를 빼야한다!
 	this->digits[index - 1] -= num - '0';	// 값 연산
 
 

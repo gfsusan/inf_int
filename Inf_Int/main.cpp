@@ -16,7 +16,9 @@ int main()
 
 	inf_int A("11111111222222223333333344444444");
 	inf_int B(A);
-	inf_int C("-11111111");
+	inf_int C("-100000000");
+	inf_int D("50");
+	inf_int E("1250");
 
 	// cin >> g ;   // not required
 
@@ -50,6 +52,10 @@ int main()
 	cout << "A + C = " << A + C << endl;
 
 	cout << "A - C = " << A - C << endl;
+
+	cout << "A * C = " << A * C << endl;
+
+	cout << "D * E = " << E * D << endl;
 
 	return 0;
 }
