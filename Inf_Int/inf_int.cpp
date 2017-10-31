@@ -210,7 +210,7 @@ inf_int operator*(const inf_int& a, const inf_int& b) {
 		}
 	}
 
-	c.thesign = a.thesign & b.thesign;
+	c.thesign = a.thesign == b.thesign;
 
 	return c;
 }
