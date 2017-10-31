@@ -204,6 +204,7 @@ inf_int operator*(const inf_int& a, const inf_int& b) {
 
 	for (int i = 0; i < b.length; i++) {			// b의 각 자리
 		for (int j = 0; j < a.length; j++) {		// a의 각 자리
+			c.Add('0', i + j + 1);
 			for (int k = 0; k < b.digits[i]-'0'; k++) {	// b의 j번째 자리 만큼 반복
 				c.Add(a.digits[j], j + i + 1);
 			}
