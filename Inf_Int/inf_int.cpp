@@ -6,52 +6,62 @@
 using namespace std;
 
 inf_int::inf_int() {
-	// 동적 할당
-	this->digits = new char[2];
-
-	// 0으로 초기화
-	this->digits[0] = '0';
-	this->digits[1] = '\0';
-	this->length = 1;
-	this->thesign = true;
+	init();
 }
 
-inf_int::inf_int(int n){
+inf_int::inf_int(int n) {
 	char buf[100];
 
-	if(n<0){		// 음수 처리
-		this->thesign=false;
-		n=-n;
-	}else{
-		this->thesign=true;
+	if (n < 0) {		// 음수 처리
+		this->thesign = false;
+		n = -n;
+	}
+	else {
+		this->thesign = true;
 	}
 
-	int i=0;
-	while(n>0){			// 숫자를 문자열로 변환하는 과정
-		buf[i]=n%10+'0';
+	int i = 0;
+	while (n > 0) {			// 숫자를 문자열로 변환하는 과정
+		buf[i] = n % 10 + '0';
 
-		n/=10;
+		n /= 10;
 		i++;
 	}
 
-	if(i==0){	// 숫자의 절댓값이 0일 경우
-		new (this) inf_int();	// 생성자 재호출...gcc에서 컴파일에러가 있다고 함. inf_int()의 경우 별개의 인스턴스가 생성됨. 
-	}else{
-		buf[i]='\0';
+	if (i == 0) {	// 숫자의 절댓값이 0일 경우
+		init();
+	}
+	else {
+		buf[i] = '\0';
 
-		this->digits=new char[i+1];
-		this->length=i;
+		this->digits = new char[i + 1];
+		this->length = i;
 		strcpy(this->digits, buf);
 	}
 }
 
 inf_int::inf_int(const char* str) {
 	string temp = str;
+
+	// integer 문자열인지 체크
+	char * p;
+	strtol(temp.c_str(), &p, 10);
+
+	if (*p != 0 || temp.empty()) {		// 정수 value가 아니거나 temp가 비었을 때
+		init();
+		return;
+	}
+
 	int i;   // temp(기존string)의 index 
 	int j;   // this->digits의 index (뒤에서부터)
 
 	if (str[0] == '-') {
 		this->thesign = false;
+		this->length = temp.length() - 1;
+		i = 1;
+	}
+	else if (str[0] == '+') {
+		this->thesign = true;
 		this->length = temp.length() - 1;
 		i = 1;
 	}
@@ -70,7 +80,7 @@ inf_int::inf_int(const char* str) {
 		j--;
 	}
 	this->digits[this->length] = '\0';
-	cout << temp << endl;
+	this->simplify();
 }
 
 inf_int::inf_int(const inf_int& a) {
@@ -83,6 +93,39 @@ inf_int::inf_int(const inf_int& a) {
 
 inf_int::~inf_int() {
 	delete digits;
+}
+
+void inf_int::init() {	// initialize to zero
+	
+	// 동적 할당
+	this->digits = new char[2];
+
+	// 0으로 초기화
+	this->digits[0] = '0';
+	this->digits[1] = '\0';
+	this->length = 1;
+	this->thesign = true;
+}
+
+inf_int& inf_int::simplify() {
+	unsigned int ctr = 0;
+
+	for (int i = this->length-1; i >= 0; i--) {
+		if (this->digits[i] == '0')
+			ctr++;
+		else break;
+	}
+	if (ctr == 0)
+		return *this;
+	else if (ctr == this->length)
+		init();
+	else {
+		this->digits = (char*)realloc(this->digits, this->length - ctr + 1);
+		this->length-=ctr;
+		this->digits[this->length] = '\0';
+	}
+
+	return *this;
 }
 
 inf_int& inf_int::operator=(const inf_int& a) {
@@ -167,13 +210,13 @@ inf_int operator+(const inf_int& a, const inf_int& b)
 
 		c.thesign = a.thesign;
 
-		return c;
+		return c.simplify();
 	}
 	else{	// 이항의 부호가 다를 경우 - 연산자로 연산
 		c = b;
 		c.thesign = a.thesign;
 
-		return a - c;
+		return (a - c).simplify();
 	}
 }
 
@@ -190,20 +233,22 @@ inf_int operator-(const inf_int& a, const inf_int&b) {
 			big.Sub(small.digits[i], i + 1);
 		}
 
-		return big;
+		return big.simplify();
 	}
 	else{	// 이항의 부호가 다를 경우 + 연산자로 연산
 		small.thesign = a.thesign;	// 여기서 small은 의미없음 temp
 
-		return a + small;
+		return (a + small).simplify();
 	}
+
+
 }
 
 inf_int operator*(const inf_int& a, const inf_int& b) {
 	inf_int c;
 
-	for (int i = 0; i < b.length; i++) {			// b의 각 자리
-		for (int j = 0; j < a.length; j++) {		// a의 각 자리
+	for (unsigned int i = 0; i < b.length; i++) {			// b의 각 자리
+		for (unsigned int j = 0; j < a.length; j++) {		// a의 각 자리
 			c.Add('0', i + j + 1);
 			for (int k = 0; k < b.digits[i]-'0'; k++) {	// b의 j번째 자리 만큼 반복
 				c.Add(a.digits[j], j + i + 1);
@@ -211,9 +256,10 @@ inf_int operator*(const inf_int& a, const inf_int& b) {
 		}
 	}
 
+	// 부호 결정
 	c.thesign = a.thesign == b.thesign;
 
-	return c;
+	return c.simplify();
 }
 
 ostream& operator<<(ostream& out, const inf_int& a) {
@@ -268,10 +314,9 @@ void inf_int::Sub(const char num, const unsigned int index)	// a의 index 자리수�
 	}
 }
 
-inf_int inf_int::Abs(){
+inf_int inf_int::Abs() const {
 	inf_int temp(*this);
 	if (temp.thesign == false)
 		temp.thesign = true;
 	return temp;
 }
-
