@@ -71,14 +71,15 @@ inf_int::inf_int(const char* str) {
 		i = 0;
 	}
 
-	j = this->length - 1;
 	this->digits = new char[this->length + 1];
 
+	j = this->length - 1;
 	while (str[i] != '\0') {
 		this->digits[j] = temp.at(i);
 		i++;
 		j--;
 	}
+
 	this->digits[this->length] = '\0';
 	this->simplify();
 }
