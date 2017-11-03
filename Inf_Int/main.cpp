@@ -7,6 +7,20 @@ using namespace std;
 
 int main()
 {
+	inf_int A("sdfalkej");
+	inf_int B(1234);
+	inf_int C("-12345678000000001234567800000000");
+	inf_int D("12345678000000001234567800000000");
+	inf_int E("+00000000123456781234567800000000");
+	inf_int F(A);
+	inf_int G;
+
+	cout << A << endl << B << endl << C << endl << D << endl << E << endl << F << endl << G << endl;
+
+
+	return 0;
+
+
 	inf_int a, e;
 	inf_int b(100);
 	inf_int c("321111111111122222222222233333333333444444444445555555555");
