@@ -72,16 +72,18 @@ inf_int::inf_int(const char* str) {
 	}
 
 	this->digits = new char[this->length + 1];
-	
+
 	j = this->length - 1;
 	while (str[i] != '\0') {
 		this->digits[j] = temp.at(i);
 		i++;
 		j--;
 	}
+
 	this->digits[this->length] = '\0';			// Null 문자 삽입
 
 	this->reshape();							// 정리
+
 }
 
 inf_int::inf_int(const inf_int& a) {
