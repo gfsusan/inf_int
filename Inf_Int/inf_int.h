@@ -20,10 +20,6 @@ private:
 	void inf_int::Sub(const char num, const unsigned int index);
 	inf_int inf_int::Abs() const;
 
-
-	void inf_int::Add(const char num, const unsigned int index);
-	void inf_int::Sub(const char num, const unsigned int index);
-
 public:
 	inf_int();               // assign 0 as a default value
 	inf_int(int);
