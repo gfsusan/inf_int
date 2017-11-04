@@ -79,9 +79,9 @@ inf_int::inf_int(const char* str) {
 		i++;
 		j--;
 	}
+	this->digits[this->length] = '\0';			// Null 문자 삽입
 
-	this->digits[this->length] = '\0';
-	this->simplify();
+	this->reshape();							// 정리
 }
 
 inf_int::inf_int(const inf_int& a) {
@@ -108,19 +108,21 @@ void inf_int::init() {	// initialize to zero
 	this->thesign = true;
 }
 
-inf_int& inf_int::simplify() {
+inf_int& inf_int::reshape() {		// remove unnecessary zero's and set the length
 	unsigned int ctr = 0;
 
+	// count the number of 0's in front
 	for (int i = this->length-1; i >= 0; i--) {
-		if (this->digits[i] == '0')
+		if (this->digits[i] == '0' || this->digits[i] == ' ')
 			ctr++;
 		else break;
 	}
-	if (ctr == 0)
+
+	if (ctr == 0)	// if no zero's, return
 		return *this;
-	else if (ctr == this->length)
+	else if (ctr == this->length)	// if all zero's, initialize to zero
 		init();
-	else {
+	else {		// reallocate memory space reduced by the number of zero's in front
 		this->digits = (char*)realloc(this->digits, this->length - ctr + 1);
 		this->length-=ctr;
 		this->digits[this->length] = '\0';
@@ -157,34 +159,30 @@ bool operator>(const inf_int& a, const inf_int& b) {
 
 	if (a == b)
 		return false;
-
-	// 부호 체크
-	// 절댓값 + > -
-	// length 긴거 > 같은거 > 짧은거
-	// 큰자리수부터 한자리씩 비교
-
-	else if (a.thesign == true && b.thesign == true) {			  // 둘 다 양수
-		if (a.length < b.length)
+	else if (a.thesign == true && b.thesign == true) {		 // 둘 다 양수
+		if (a.length < b.length)			// a가 b보다 짧음
 			return false;
-		else if (a.length == b.length) {
+		else if (a.length == b.length) {	// a와 b의 길이가 같음
 			for (int i = a.length; i >= 0; i--)
 				if (a.digits[i] < b.digits[i])
 					return false;
 		}
+		// a가 b보다 긺 -> if-else 빠져 나와 true
 	}
-	else if (a.thesign == false && b.thesign == true) {		 // a는 음수, b는 양수
+	else if (a.thesign == false && b.thesign == true) {		// a는 음수, b는 양수
 		return false;
 	}
 	else if (a.thesign == false && b.thesign == false) {	// 둘 다 음수
-		if (a.length > b.length)
+		if (a.length > b.length)			// a가 b보다 긺
 			return false;
-		else if (a.length == b.length) {
+		else if (a.length == b.length) {	// a와 b의 길이가 같음
 			for (int i = a.length; i >= 0; i--)
 			if (a.digits[i] > b.digits[i])
 				return false;
 		}
+		// a가 b보다 짧음 -> if-else 빠져 나와 true
 	}
-	return true;										// a는 양수, b는 음수
+	return true;											// a는 양수, b는 음수 + 기타 경우
 
 }
 
@@ -213,7 +211,7 @@ inf_int operator+(const inf_int& a, const inf_int& b) {
 
 		c.thesign = a.thesign;
 
-		return c.simplify();
+		return c.reshape();
 	}
 	else{	// 이항의 부호가 다를 경우 - 연산자로 연산
 		c = b;
@@ -228,23 +226,22 @@ inf_int operator-(const inf_int& a, const inf_int&b) {
 	inf_int big = a, small = b;
 
 	if (a.thesign == b.thesign){	// 이항의 부호가 같을 경우 - 연산자로 연산
-		if (big.Abs() < small.Abs()){
+		if (a.Abs() < b.Abs()){			// a의 절댓값이 b의 절댓값보다 작으면
 			small = a;
 			big = b;
+			big.thesign = !big.thesign;	// 부호 반전이 일어남
 		}
 		for (unsigned int i = 0; i<small.length; i++){
 			big.Sub(small.digits[i], i + 1);
 		}
 
-		return big.simplify();
+		return big.reshape();
 	}
 	else{	// 이항의 부호가 다를 경우 + 연산자로 연산
 		small.thesign = a.thesign;	// 여기서 small은 의미없음 temp
 
 		return a + small;
 	}
-
-
 }
 
 inf_int operator*(const inf_int& a, const inf_int& b) {
@@ -262,7 +259,7 @@ inf_int operator*(const inf_int& a, const inf_int& b) {
 	// 부호 결정
 	c.thesign = a.thesign == b.thesign;
 
-	return c.simplify();
+	return c.reshape();
 }
 
 ostream& operator<<(ostream& out, const inf_int& a) {

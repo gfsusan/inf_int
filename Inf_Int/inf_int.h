@@ -14,11 +14,11 @@ private:
 	// you may insert additional private members here.
 
 	void inf_int::init();	// initialize to zero
-
-	inf_int& inf_int::simplify();	// remove unnecessary zero's and set length;
+	inf_int& inf_int::reshape();	// remove unnecessary zero's and set the length;
 
 	void inf_int::Add(const char num, const unsigned int index);
 	void inf_int::Sub(const char num, const unsigned int index);
+	inf_int inf_int::Abs() const;
 
 public:
 	inf_int();               // assign 0 as a default value
@@ -29,8 +29,6 @@ public:
 
 	inf_int& operator=(const inf_int&); // assignment operator
 
-	inf_int inf_int::Abs() const;
-	
 	friend bool operator==(const inf_int&, const inf_int&);
 	friend bool operator!=(const inf_int&, const inf_int&);
 	friend bool operator>(const inf_int&, const inf_int&);
