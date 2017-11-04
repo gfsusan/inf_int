@@ -156,34 +156,26 @@ bool operator!=(const inf_int& a, const inf_int& b) {
 
 bool operator>(const inf_int& a, const inf_int& b) {
 
+	if (a.thesign != b.thesign) {	// 부호가 다르면
+		return a.thesign;
+	}
+	if (a.length > b.length) {	// 부호가 같고, 길이가 다르면
+		return a.thesign;
+	}
+	if (a.length < b.length) {
+		return !a.thesign;
+	}
+	// 부호가 같고 길이가 같으면
+	for (int i = a.length - 1; i >= 0; i--) {
+		if (a.digits[i] > b.digits[i])
+			return a.thesign;
+		else if (b.digits[i] > a.digits[i])
+			return !a.thesign;
+		else
+			continue;
+	}
 
-	if (a == b)
-		return false;
-	else if (a.thesign == true && b.thesign == true) {		 // 둘 다 양수
-		if (a.length < b.length)			// a가 b보다 짧음
-			return false;
-		else if (a.length == b.length) {	// a와 b의 길이가 같음
-			for (int i = a.length; i >= 0; i--)
-				if (a.digits[i] < b.digits[i])
-					return false;
-		}
-		// a가 b보다 긺 -> if-else 빠져 나와 true
-	}
-	else if (a.thesign == false && b.thesign == true) {		// a는 음수, b는 양수
-		return false;
-	}
-	else if (a.thesign == false && b.thesign == false) {	// 둘 다 음수
-		if (a.length > b.length)			// a가 b보다 긺
-			return false;
-		else if (a.length == b.length) {	// a와 b의 길이가 같음
-			for (int i = a.length; i >= 0; i--)
-			if (a.digits[i] > b.digits[i])
-				return false;
-		}
-		// a가 b보다 짧음 -> if-else 빠져 나와 true
-	}
-	return true;											// a는 양수, b는 음수 + 기타 경우
-
+	return false;
 }
 
 bool operator<(const inf_int& a, const inf_int& b) {
@@ -202,10 +194,10 @@ inf_int operator+(const inf_int& a, const inf_int& b) {
 	unsigned int i;
 
 	if (a.thesign == b.thesign){	// 이항의 부호가 같을 경우 + 연산자로 연산
-		for (i = 0; i<a.length; i++){
+		for (i = 0; i < a.length; i++) {
 			c.Add(a.digits[i], i + 1);
 		}
-		for (i = 0; i<b.length; i++){
+		for (i = 0; i < b.length; i++) {
 			c.Add(b.digits[i], i + 1);
 		}
 
@@ -226,7 +218,7 @@ inf_int operator-(const inf_int& a, const inf_int&b) {
 	inf_int big = a, small = b;
 
 	if (a.thesign == b.thesign){	// 이항의 부호가 같을 경우 - 연산자로 연산
-		if (a.Abs() < b.Abs()){			// a의 절댓값이 b의 절댓값보다 작으면
+		if (a.Abs() < b.Abs()) {			// a의 절댓값이 b의 절댓값보다 작으면
 			small = a;
 			big = b;
 			big.thesign = !big.thesign;	// 부호 반전이 일어남
