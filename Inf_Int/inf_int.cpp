@@ -154,11 +154,14 @@ bool operator!=(const inf_int& a, const inf_int& b) {
 
 bool operator>(const inf_int& a, const inf_int& b) {
 
-	// 절댓값 + > -
-	// length 긴거 > 같은거 > 짧은거
-	// 큰자리수 더큰 > 작은거
+
 	if (a == b)
 		return false;
+
+	// 부호 체크
+	// 절댓값 + > -
+	// length 긴거 > 같은거 > 짧은거
+	// 큰자리수부터 한자리씩 비교
 
 	else if (a.thesign == true && b.thesign == true) {			  // 둘 다 양수
 		if (a.length < b.length)
@@ -196,8 +199,7 @@ bool operator<(const inf_int& a, const inf_int& b) {
 	return true;
 }
 
-inf_int operator+(const inf_int& a, const inf_int& b)
-{
+inf_int operator+(const inf_int& a, const inf_int& b) {
 	inf_int c;
 	unsigned int i;
 
@@ -217,7 +219,7 @@ inf_int operator+(const inf_int& a, const inf_int& b)
 		c = b;
 		c.thesign = a.thesign;
 
-		return (a - c).simplify();
+		return a - c;
 	}
 }
 
@@ -239,7 +241,7 @@ inf_int operator-(const inf_int& a, const inf_int&b) {
 	else{	// 이항의 부호가 다를 경우 + 연산자로 연산
 		small.thesign = a.thesign;	// 여기서 small은 의미없음 temp
 
-		return (a + small).simplify();
+		return a + small;
 	}
 
 
